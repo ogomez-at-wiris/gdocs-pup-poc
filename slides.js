@@ -72,7 +72,6 @@ const main = async () => {
     console.log('got input');
     await input.type('123');
     console.log('typed');
-    await page.waitForTimeout(1000);
     await app.click('#insert-button')
     console.log('clicked insert');
     await page.waitForTimeout(5000);
