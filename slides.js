@@ -29,10 +29,10 @@ const main = async () => {
 
 
     console.log('deleting equations');
-await page.keyboard.down('Control');
-await page.keyboard.press('KeyA');
-await page.keyboard.up('Control');
-await page.keyboard.press('Delete');
+    await page.keyboard.down('Control');
+    await page.keyboard.press('KeyA');
+    await page.keyboard.up('Control');
+    await page.keyboard.press('Delete');
 
     await page.keyboard.down('Alt');
     await page.keyboard.press('KeyN');
@@ -89,10 +89,10 @@ await page.keyboard.press('Delete');
     const insertButton = await modalApp.waitForXPath('//button[@id="insert-button"]')
     await insertButton.click();
     console.log('clicked insert');
-await page.waitForTimeout(8000);
-await page.keyboard.press('Tab')
-await openMathtypeButton.click();
-console.log('click open mt');
+    await page.waitForTimeout(8000);
+    await page.keyboard.press('Tab')
+    await openMathtypeButton.click();
+    console.log('click open mt');
 }
 
 main();
