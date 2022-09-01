@@ -19,6 +19,21 @@ const main = async () => {
     await page.keyboard.press('Enter')
     await page.waitForNavigation();
     await page.goto('https://docs.google.com/presentation/d/1VpVdOqw6rOYg5eNDiPP6EjX751xEf4u3qlt1D7nU9Mg/edit')
+    await page.waitForTimeout(5000);
+    // get all image html tags present
+    const images = await page.evaluate(() => {
+        const images = document.querySelectorAll('image');
+        return Array.from(images);
+    });
+    console.log('found image count', images.length);
+
+
+    console.log('deleting equations');
+await page.keyboard.down('Control');
+await page.keyboard.press('KeyA');
+await page.keyboard.up('Control');
+await page.keyboard.press('Delete');
+
     await page.keyboard.down('Alt');
     await page.keyboard.press('KeyN');
     await page.keyboard.up('Alt');
@@ -36,18 +51,13 @@ const main = async () => {
     const sandboxContent = await sandbox.contentFrame();
     console.log('got sandbox content');
     await page.waitForTimeout(10000)
-    // let bodyHTML = await sandboxContent.content();
+
     const userFrame = await sandboxContent.waitForSelector('iframe')
     console.log('got user frame');
     const userContent = await userFrame.contentFrame()
     console.log('content');
     let app = await userContent.waitForSelector('#app');
     console.log('app found!');
-    let canvas = await page.waitForSelector('canvas');
-    await canvas.screenshot({
-        path: 'example.png'
-    });
-    console.log('screenshot made')
 
     const openMathtypeButton = await app.waitForXPath('//button[contains(., "Open MathType")]/*')
     await openMathtypeButton.click();
@@ -58,33 +68,31 @@ const main = async () => {
     console.log('got iframe');
 
     const modalDialogFrameContent = await modalDialogFrame.contentFrame();
-    console.log('got content', util.inspect(await modalDialogFrameContent.content()));
+    console.log('got content');
     const modalSandbox = await modalDialogFrameContent.waitForSelector('#sandboxFrame')
     console.log('got sandbox');
     const modalSandboxContent = await modalSandbox.contentFrame();
     console.log('got sandbox content');
-    // let bodyHTML = await sandboxContent.content();
     const modalUserFrame = await modalSandboxContent.waitForSelector('iframe')
     console.log('got user frame');
     const modalUserContent = await modalUserFrame.contentFrame()
     console.log('content');
 
-    app = await modalUserContent.waitForSelector('#app');
+    modalApp = await modalUserContent.waitForSelector('#app');
     console.log('got editor app');
-    const input = await app.waitForSelector('#editorContainer');
+    let input = await modalApp.waitForSelector('#editorContainer input');
+    await input.focus();
     console.log('got input');
     await input.type('123');
     console.log('typed');
     await page.waitForTimeout(1000);
-    await app.click('#insert-button')
+    const insertButton = await modalApp.waitForXPath('//button[@id="insert-button"]')
+    await insertButton.click();
     console.log('clicked insert');
-    await page.waitForTimeout(5000);
-    canvas = await page.waitForSelector('canvas');
-    await canvas.screenshot({
-        path: 'example_equation.png'
-    });
-    console.log('screenshot made')
-
+await page.waitForTimeout(8000);
+await page.keyboard.press('Tab')
+await openMathtypeButton.click();
+console.log('click open mt');
 }
 
 main();
