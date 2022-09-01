@@ -18,8 +18,11 @@ const main = async () => {
     await page.type('input[type="password"]', process.env.PASSWORD);
     await page.keyboard.press('Enter')
     await page.waitForNavigation();
-    await page.goto('https://docs.google.com/document/d/1-DXdfm6zTGDWz9Ygw_nYDvHHqnJm8UPudPZNo6C3rSs/edit')
-    await page.click('#docs-extensions-menu')
+    await page.goto('https://docs.google.com/presentation/d/1VpVdOqw6rOYg5eNDiPP6EjX751xEf4u3qlt1D7nU9Mg/edit')
+    await page.keyboard.down('Alt');
+    await page.keyboard.press('KeyN');
+    await page.keyboard.up('Alt');
+    await page.waitForTimeout(1000);
     const betaElement = await page.waitForXPath('//*[@id="M7QBcEIXAo8qRwgHek537QAI9Xc9qMK8g"]/div')
     await betaElement.click();
     const element = await page.waitForXPath('//div[contains(., "Open MathType")]/*')
@@ -72,6 +75,7 @@ const main = async () => {
     console.log('got input');
     await input.type('123');
     console.log('typed');
+    await page.waitForTimeout(1000);
     await app.click('#insert-button')
     console.log('clicked insert');
     await page.waitForTimeout(5000);
